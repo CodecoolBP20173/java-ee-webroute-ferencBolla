@@ -13,25 +13,21 @@ public class RequestHandler implements HttpHandler {
 
     @WebRoute(urlPattern = "/", method = "GET")
     public static void rootHandler(HttpExchange httpExchange) throws IOException {
-        String response = "This is the root";
-        httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        displaySimpleText(httpExchange, "This is the root");
     }
 
     @WebRoute(urlPattern = "/test", method = "GET")
     public static void testHandler(HttpExchange httpExchange) throws IOException {
-        String response = "This is the test";
-        httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        displaySimpleText(httpExchange, "This is the test");
     }
 
-    @WebRoute(urlPattern = "users", method = "POST")
+    @WebRoute(urlPattern = "/users", method = "POST")
     public static void usersHandler(HttpExchange httpExchange) throws IOException {
-        String response = "This is the root";
+        displaySimpleText(httpExchange, "This is the users");
+    }
+
+    private static void displaySimpleText(HttpExchange httpExchange, String s) throws IOException {
+        String response = s;
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
@@ -54,8 +50,9 @@ public class RequestHandler implements HttpHandler {
             Annotation annotation = method.getAnnotation(WebRoute.class);
             if (isMatchingURLAndMethod(uri, requestMethod, (WebRoute) annotation)) {
                 try {
-                    System.out.println(method);
+
                     method.invoke(null, httpExchange);
+
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
