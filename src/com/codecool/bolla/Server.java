@@ -8,7 +8,6 @@ public class Server {
 
     private HttpServer server;
 
-    //    @WebRoute()
     public void initServer() {
         try {
 
@@ -17,8 +16,14 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        createContent();
         startServer();
+    }
+
+
+    private void createServer() throws Exception {
+        int port = 8080;
+        this.server = HttpServer.create(new InetSocketAddress(port), 0);
     }
 
     private void startServer() {
@@ -26,8 +31,8 @@ public class Server {
         server.start();
     }
 
-    private void createServer() throws Exception {
-        this.server = HttpServer.create(new InetSocketAddress(8000), 0);
+    private void createContent() {
+        server.createContext("/", new RequestHandler());
     }
 
 }
